@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # CRUD users
     path('user/', include('apps.users.api_users.urls')), # Ruta para CRUD de usuarios
+    path('rol/', include('apps.users.api_roles.urls')), # Ruta para CRUD de roles de usuarios
 ]
