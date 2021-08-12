@@ -8,13 +8,13 @@ from apps.users.api_roles.serializers import RolSerializer
 @api_view(['GET', 'POST'])
 def roles_api_view(request):
 
-    # Listar
+    # List
     if request.method == 'GET':
         roles = Rol.objects.all()
         roles_serializer = RolSerializer(roles, many = True)
         return Response(roles_serializer.data, status = status.HTTP_200_OK)
 
-    # Creación
+    # Create
     if request.method == 'POST':
         rol_serializer = RolSerializer(data = request.data)
         if rol_serializer.is_valid():
@@ -28,12 +28,12 @@ def rol_detail_api_view(request,pk=None):
     rol = Rol.objects.filter(id=pk).first()
 
     if rol:
-        # Obtener
+        # Retrieve
         if request.method == 'GET':
             roles_serializer = RolSerializer(rol)
             return Response(roles_serializer.data, status = status.HTTP_200_OK)
         
-        # Actualizar
+        # Update
         elif request.method == 'PUT':
             roles_serializer = RolSerializer(rol, data= request.data)
             if roles_serializer.is_valid():
@@ -41,7 +41,7 @@ def rol_detail_api_view(request,pk=None):
                 return Response({"message": "Actualización de rol exitosa.","rol":roles_serializer.data}, status = status.HTTP_200_OK)
             return Response({"message": "error durante la actualización del rol.", "errors": roles_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
-        # Eliminar
+        # Delete
         elif request.method == 'DELETE':
             print(rol)
             rol.delete()
