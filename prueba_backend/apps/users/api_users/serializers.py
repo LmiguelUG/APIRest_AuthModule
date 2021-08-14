@@ -12,9 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    
     def update(self, instance, validated_data):
-        print(f'entro aqui {validated_data}')
         user = super().update(instance, validated_data) 
         user.set_password(validated_data['password']) # encriptación de contraseña al actualizar
         user.save()

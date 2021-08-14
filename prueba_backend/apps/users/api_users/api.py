@@ -22,7 +22,7 @@ def user_api_view(request):
         users_serializer = UserSerializer(data = request.data)
         if users_serializer.is_valid(): 
             users_serializer.save()
-            return Response({"message": "usuario creado correctamente", "user": users_serializer.data}, status = status.HTTP_201_CREATED)
+            return Response({"message": "usuario registrado correctamente", "user": users_serializer.data}, status = status.HTTP_201_CREATED)
 
         return Response({"message": "error durante la creación de usuario", "error": users_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
