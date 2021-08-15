@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from apps.users.models import User
+from apps.users.users.serializers import UserSerializer
 from apps.users.other_views.serializers import LogoutSerializer, LoginSerializer
-
 
 class Login(generics.GenericAPIView):
     

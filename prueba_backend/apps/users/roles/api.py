@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from apps.users.models import Rol
-from apps.users.api_roles.serializers import RolSerializer
+from apps.users.roles.serializers import RolSerializer
 
 @api_view(['GET', 'POST'])
 def roles_api_view(request):

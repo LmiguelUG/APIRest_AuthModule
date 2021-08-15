@@ -1,10 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
-from apps.users.api_permissions.serializers import PermissionSerializer
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from apps.users.api_permissions.serializers import PermissionSerializer, PermissionListSerializer, UpdatePermissionSerializer
+from apps.users.permissions.serializers import PermissionSerializer, PermissionListSerializer, UpdatePermissionSerializer
 # Importacion de modelos
 from django.contrib.auth.models import Permission
 from apps.users.models import User

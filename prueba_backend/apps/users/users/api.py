@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-
-from apps.users.api_users.serializers import UserSerializer, UserListSerializer
+from django.conf import settings
+from apps.users.users.serializers import UserSerializer, UserListSerializer
 from apps.users.models import User
 
 @api_view(['GET','POST'])
@@ -18,11 +18,15 @@ def user_api_view(request):
     # Creación
     elif request.method == 'POST':
         
-         # Si aprueba las validaciones para el modelo de usuario, guardo en la BD o retorno algún error, de existir
+        # Si aprueba las validaciones para el modelo de usuario, guardo en la BD o retorno algún error, de existir
         users_serializer = UserSerializer(data = request.data)
         if users_serializer.is_valid(): 
             users_serializer.save()
-            return Response({"message": "usuario registrado correctamente", "user": users_serializer.data}, status = status.HTTP_201_CREATED)
+            user_data = users_serializer.data
+            user = User.objects.get(email=user_data['email'])
+
+            data = { "username": user.username, "email": user.email, 'name':user.name, "last_name":user.last_name, 'tokens': user.tokens()}
+            return Response({"message": "usuario registrado correctamente", "user": data}, status = status.HTTP_201_CREATED)
 
         return Response({"message": "error durante la creación de usuario", "error": users_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
