@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from apps.users.other_views.views import Login, LogoutAPIView
+from apps.users.other_views.views import Login, LogoutAPIView, RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,6 +10,6 @@ urlpatterns = [
     
     path('login/', Login.as_view(), name = 'login'),
     path('logout/', LogoutAPIView.as_view(), name = 'logout'),
-    path('register/', include('apps.users.users.urls'), name='register'),
+    path('register/', RegisterView.as_view(), name='register'),
     path('accounts/', include('apps.authsocial.urls'), name='account_google'),
 ]

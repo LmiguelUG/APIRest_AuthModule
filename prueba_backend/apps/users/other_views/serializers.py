@@ -6,6 +6,18 @@ from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "name", "last_name", "email", "password"]
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data['password']) # encriptación de contraseña al crear
+        user.save()
+        return user
+
+
 class LoginSerializer(serializers.ModelSerializer):
     email    = serializers.EmailField(max_length=255, min_length=3)
     password = serializers.CharField (max_length=68,  min_length=6, write_only=True)
