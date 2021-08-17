@@ -10,5 +10,6 @@ urlpatterns = [
     
     path('login/', Login.as_view(), name = 'login'),
     path('logout/', LogoutAPIView.as_view(), name = 'logout'),
-    path('register/', include('apps.users.users.urls'), name='register')
+    path('register/', include('apps.users.users.urls'), name='register'),
+    path('accounts/', include('apps.authsocial.urls'), name='account_google'),
 ]
