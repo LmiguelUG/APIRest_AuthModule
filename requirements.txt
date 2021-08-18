@@ -3,3 +3,5 @@ djangorestframework==3.12.4
 psycopg2==2.9.1
 Pillow==8.3.1
 djangorestframework-simplejwt==4.7.2
+django-rest-passwordreset==1.2.0
+requests==2.26.0

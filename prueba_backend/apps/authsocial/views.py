@@ -88,7 +88,8 @@ class FacebookView(APIView):
             user.email = user_info_response["email"]
             # Contraseña predeterminada aleatoria
             user.password = make_password(BaseUserManager().make_random_password())
-            user.auth_provider = 'facebook' 
+            user.auth_provider = 'facebook'
+            user.is_activate = True
             user.save()
             
 
@@ -120,6 +121,7 @@ class GoogleView(APIView):
             # Contraseña predeterminada aleatoria
             user.password = make_password(BaseUserManager().make_random_password())
             user.auth_provider = 'email'
+            user.is_activate = True
 
         data = {
             "message": 'usuario logueado correctamente',

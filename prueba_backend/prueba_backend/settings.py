@@ -27,6 +27,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db_prueba',
+        'USER': 'postgres',
+        'PASSWORD': 'postgresql',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 # Application definition
 
@@ -36,8 +49,7 @@ BASE_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist',
+    'django.contrib.staticfiles',   
 ]
 
 LOCAL_APPS = [
@@ -48,6 +60,8 @@ LOCAL_APPS = [
 THIRD_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_rest_passwordreset',
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -133,9 +147,10 @@ REST_FRAMEWORK = {
     ), 
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER='luism3872@@gmail.com'
-EMAIL_HOST_PASSWORD='luismoro67'
+EMAIL_HOST_USER='luism3872@gmail.com'
+EMAIL_HOST_PASSWORD='Luisurbinamoro67'
 

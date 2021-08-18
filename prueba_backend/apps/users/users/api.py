@@ -16,8 +16,7 @@ def user_api_view(request):
         return Response({"users": users_serializer.data}, status = status.HTTP_200_OK)
 
     # Creación
-    elif request.method == 'POST':
-        
+    elif request.method == 'POST':    
         # Si aprueba las validaciones para el modelo de usuario, guardo en la BD o retorno algún error, de existir
         users_serializer = UserSerializer(data = request.data)
         if users_serializer.is_valid(): 
@@ -26,9 +25,9 @@ def user_api_view(request):
             user = User.objects.get(email=user_data['email'])
 
             data = { "username": user.username, "email": user.email, 'name':user.name, "last_name":user.last_name, 'tokens': user.tokens()}
-            return Response({"message": "usuario registrado correctamente", "user": data}, status = status.HTTP_201_CREATED)
+            return Response({"message": "user created successfully", "user": data}, status = status.HTTP_201_CREATED)
+        return Response({"message": "error during user creation", "error": users_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "error durante la creación de usuario", "error": users_serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','PUT','DELETE'])
 def user_detail_api_view(request,pk=None):
@@ -54,4 +53,4 @@ def user_detail_api_view(request,pk=None):
             message = f'eliminado {user.username} correctamente'
             return Response({"message": message}, status = status.HTTP_200_OK)
 
-    return Response({'message:': 'Usuario no encontrado, petición incorrecta'}, status = status.HTTP_400_BAD_REQUEST)
+    return Response({'error:': 'Usuario no encontrado, petición incorrecta'}, status = status.HTTP_400_BAD_REQUEST)

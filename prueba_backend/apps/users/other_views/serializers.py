@@ -5,7 +5,45 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
+from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 
+
+class ResetPasswordEmailRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(min_length=2)
+    # redirect_url = serializers.CharField(max_length=500, required=False)
+
+    class Meta:
+        fields = ['email']
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(min_length=6, max_length=68, write_only=True)
+    token = serializers.CharField(min_length=1, write_only=True)
+    uidb64 = serializers.CharField(min_length=1, write_only=True)
+
+    class Meta:
+        fields = ['password', 'token', 'uidb64']
+
+    def validate(self, validated_data):
+        try:
+            password = validated_data.get('password')
+            token    = validated_data.get('token')
+            uidb64   = validated_data.get('uidb64')
+
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'message': 'Link de reestablecimiento invalido'}, status = status.HTTP_401_UNAUTHORIZED)
+            
+            # Establecimiento de contraseña(nueva) a usuario
+            user.set_password(password)
+            user.save()
+            return (user)
+            
+        except Exception as e:
+             return Response({'message': 'Link de reestablecimiento invalido'}, status = status.HTTP_401_UNAUTHORIZED)
+        return super().validate(validated_data)
+
+        
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

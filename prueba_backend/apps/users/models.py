@@ -41,8 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     name      = models.CharField ('Nombre',max_length=255,blank=True, null=True)
     image     = models.ImageField('Imagen de Perfil',upload_to='perfil/',max_length=255,null=True,blank=True)
     last_name = models.CharField ('Apellido',max_length=255,blank=True, null=True)
-    rol       = models.ManyToManyField(Rol)
-    is_activate   = models.BooleanField(default=True)
+    rol       = models.ManyToManyField(Rol,default="USER_CLIENT")
+    is_activate   = models.BooleanField(default=False)
     is_staff      = models.BooleanField(default=False)
     auth_provider = models.CharField(max_length=255, blank=False, null=False, default = AUTH_PROVIDERS.get('username'))
     
