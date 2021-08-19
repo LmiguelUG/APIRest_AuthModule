@@ -53,8 +53,9 @@ BASE_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.users',
-    'apps.authsocial'
+    'apps.authentication',
+    'apps.socialauthentication',
+    'apps.CRUDS'
 ]
 
 THIRD_APPS = [
@@ -139,7 +140,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -154,3 +155,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER='luism3872@gmail.com'
 EMAIL_HOST_PASSWORD='Luisurbinamoro67'
 
+
+FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"
+FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/v7.0/oauth/access_token"
+FACEBOOK_URL = "https://graph.facebook.com/"
+# Datos privados de la APP de Facebook
+CLIENT_ID="4276744392401466"
+CLIENT_SECRET="bdeb4abaf871d6c147a2c7b7a6d987ae"
