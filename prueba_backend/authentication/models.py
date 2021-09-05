@@ -5,8 +5,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
-from datetime import datetime, timedelta
-import jwt
+from datetime import datetime
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class MyUserManager(UserManager):
@@ -55,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
     is_active = models.BooleanField(_('active'), default = True)
     email_verified = models.BooleanField(_('email verified'), default = False)
     date_joined = models.DateTimeField(_('date joined'), default = timezone.now)
+    auth_provider = models.CharField(_('auth provider'), max_length = 50, default = 'username')
 
     objects = MyUserManager()
 
@@ -62,8 +63,9 @@ class User(AbstractBaseUser, PermissionsMixin, TrackingModel):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['password', 'email']
 
-    @property
-    def token(self):
-        token = jwt.encode({'username': self.username, 'email': self.email, 'exp': datetime.utcnow() + timedelta(seconds = 300)}, settings.SECRET_KEY, algorithm = "HS256")    
-        
-        return token
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return{
+            'refresh':str(refresh),
+            'access':str(refresh.access_token)
+        }

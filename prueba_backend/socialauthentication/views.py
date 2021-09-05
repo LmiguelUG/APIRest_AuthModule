@@ -11,15 +11,18 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from authentication.models import User
 
-
+# https://www.facebook.com/v7.0/dialog/oauth?client_id=4276744392401466&redirect_uri=http://localhost:8000/api/auth/social/facebook&state={%22{st=state123abc,ds=123456789}%22}&scope=email      
 class FacebookAPIView(APIView):
-    
+
+    authentication_classes = []
+
     def get(self, request):
         # Token de acceso capturado desde el redireccionamiento de inicio de sesión de facebook
-        # https://graph.facebook.com/v7.0/oauth/access_token?client_id={client_id}&redirect_uri=http://localhost:8000/accounts/facebook&client_secret={client_secret}&code={captured code}
+        # https://graph.facebook.com/v7.0/oauth/access_token?client_id={client_id}&redirect_uri=http://localhost:8000/api/auth/social/facebook&client_secret={client_secret}&code={captured code}
+    
         user_access_token_payload = {
             "client_id": settings.CLIENT_ID,
-            "redirect_uri": 'http://localhost:8000/accounts/facebook',
+            "redirect_uri": 'http://localhost:8000/api/auth/social/facebook',
             "client_secret": settings.CLIENT_SECRET,
             "code": request.GET.get("code"),
         }

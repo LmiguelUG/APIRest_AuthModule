@@ -11,7 +11,7 @@ import jwt
 
 from authentication.models import User
 # Serializers
-from authentication.serializers import LogoutSerializer, LoginSerializer, ProfileSerializer, RegisterSerializer
+from authentication.serializers import LoginSerializer, ProfileSerializer, RegisterSerializer, LogoutSerializer
 from authentication.serializers import SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, UserTokenSerializer
 
 class RegisterView(generics.GenericAPIView):
@@ -25,18 +25,18 @@ class RegisterView(generics.GenericAPIView):
         serializer = self.serializer_class( data = request.data )
         if serializer.is_valid(): 
             serializer.save()
-            user = User.objects.get( email = serializer.data['email'] )
-            token = user.token
+            user = User.objects.get( username = serializer.data['username'] )
+            tokens = user.tokens()
 
             # -- CONSTRUCCIÓN DEL CORREO --
             current_site  = get_current_site(request).domain  # Obtengo el dominio de donde se hace la request
             relativeLink  = reverse('verify_email') # Enlace de redireccionamiento para verificación
-            absolute_urls = 'http://'+ current_site + relativeLink +"?token="+ token # URL absoluta para acceder desde el correo recibido
+            absolute_urls = 'http://'+ current_site + relativeLink +"?token="+str(tokens['access']) # URL absoluta para acceder desde el correo recibido
             email_body    = 'Hola, Bienvenido '+ user.username + '\nUsa este link para verificar tu registro. \n' + absolute_urls
 
             data = {'email_body': email_body, 'to_email': user.email,'email_subject': 'Verificación de cuenta'}
             Util.send_email(data)
-            user_data = { "username": user.username, "email": user.email, 'token': token}
+            user_data = { "username": user.username, "email": user.email }
             
             return response.Response({"message": "check your mailbox, we have sent a verification email", "user": user_data}, status = status.HTTP_201_CREATED)
         
@@ -51,7 +51,7 @@ class VerifyEmailAPIView(generics.GenericAPIView):
         token = request.GET.get('token')
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
         print(f'payload {payload}')
-        user    = User.objects.get(username = payload['username'])
+        user    = User.objects.get(id = payload['user_id'])
         
         if not user.email_verified:
             user.email_verified = True
@@ -70,7 +70,6 @@ class LoginAPIView(generics.GenericAPIView):
         username    = request.data.get('username',)
         password = request.data.get('password',)
         user = authenticate(username = username, password = password)
-
         if user:
             serializer = self.serializer_class(user)
             return response.Response(serializer.data, status = status.HTTP_200_OK)
@@ -90,17 +89,15 @@ class ProfileAPIView(generics.GenericAPIView):
         return response.Response({"user": serializer.data})
 
 
-class LogoutAPIView(generics.GenericAPIView):
+class LogoutAPIView (generics.GenericAPIView): 
     
-    permissions_classes = (permissions.IsAuthenticated, )
-
+    serializer_class = LogoutSerializer
+    permission_classes = (permissions.IsAuthenticated,)
     def post(self, request):
-        serializer = LogoutSerializer(data=request.data)
-        if serializer.is_valid():
-            return response.Response({"message":"successful logout."},status=status.HTTP_200_OK)
-        
-        return response.Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST )
-
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return response.Response({'message:':'successful logout'},status=status.HTTP_204_NO_CONTENT)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer

@@ -7,6 +7,73 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 
+
+class RegisterSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(max_length = 80, min_length = 8, write_only = True)
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "password"]
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
+class LoginSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(max_length = 80, min_length = 8, write_only = True)
+    tokens = serializers.SerializerMethodField()
+
+    def get_tokens(self, obj):
+        user = User.objects.get(username = obj.username)
+        return { 'refresh': user.tokens()['refresh'], 'access': user.tokens()['access'] }
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password', 'tokens')
+
+    def validate(self, data):
+        username = data.get('username','')
+        password = data.get('password','')
+        user = auth.authenticate(username=username,password=password)
+        
+        if not user:
+            raise AuthenticationFailed('Invalid credentials, try again')
+        
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        
+        return {'email': user.email, 'username': user.username, 'tokens': user.tokens }
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+   class Meta:
+        model = User
+        fields = ("username", "email")
+
+
+class LogoutSerializer(serializers.ModelSerializer):
+    
+    refresh = serializers.CharField()
+    
+    class Meta:
+        model = User
+        fields = ['refresh']
+
+    def validate(self, data):
+        self.token = data['refresh']
+        return data
+
+    def save(self, **kwargs):
+        try:
+            RefreshToken(self.token).blacklist()
+        except:
+             return Response({'message': 'token invalid'}, status = status.HTTP_401_UNAUTHORIZED)  
+
+
+
+
 class UserTokenSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -47,44 +114,4 @@ class SetNewPasswordSerializer(serializers.Serializer):
              return Response({'message': 'Link de reestablecimiento invalido'}, status = status.HTTP_401_UNAUTHORIZED)
         return super().validate(validated_data)
 
-class ProfileSerializer(serializers.ModelSerializer):
-
-   class Meta:
-        model = User
-        fields = ("username", "email")
-    
-
-class RegisterSerializer(serializers.ModelSerializer):
-
-    password = serializers.CharField(max_length = 80, min_length = 8, write_only = True)
-
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "password"]
-
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
-
-class LoginSerializer(serializers.ModelSerializer):
-
-    password = serializers.CharField(max_length = 80, min_length = 8, write_only = True)
-
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password', 'token')
-        read_only_fields = ['token', 'email']
                 
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-    default_error_message = {'bad_token': ('Invalid or expired token.')}
-
-    def validate(self, validated_data):
-        self.token = validated_data['refresh']
-        return validated_data
-
-    def save(self, **kwargs):
-        try:
-            RefreshToken(self.token).blacklist()
-        except:
-            return f'Token errado.'

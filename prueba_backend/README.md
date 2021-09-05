@@ -365,7 +365,8 @@ PATCH/password_reset_complete {"uidb64": "<uidb64 obtenido en la etapa 2>","toke
 Nota: Para acceder con facebook en la app dirigase al siguiente enlace, el cual en dado caso el Fronend redieccionaría para hacer la solicitud de inicio de sesión en la aplicación
 ```
 ```
-https://www.facebook.com/v7.0/dialog/oauth?client_id=4276744392401466&redirect_uri=http://localhost:8000/accounts/facebook&state={%22{st=state123abc,ds=123456789}%22}&scope=email
+https://www.facebook.com/v7.0/dialog/oauth?client_id=4276744392401466&redirect_uri=http://localhost:8000/api/auth/social/facebook&state={%22{st=state123abc,ds=123456789}%22}&scope=email
+        
 ```
 
 #### Obtendrá
@@ -386,7 +387,7 @@ https://www.facebook.com/v7.0/dialog/oauth?client_id=4276744392401466&redirect_u
 
 ### Google
 ```
-Nota: Para probar este enpoints de la api, en el patio de ejuegos, https://developers.google.com/oauthplayground/ 
+Nota: Para probar este enpoints de la api, en el patio de juegos, https://developers.google.com/oauthplayground/ 
 seleccione 'Google OAuth2 API v2' y autorice para obtener un token de acceso
 ```
 ```

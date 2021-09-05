@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv 
 import os
+import datetime
 
 load_dotenv ()
 
@@ -58,13 +59,13 @@ BASE_APPS = [
 
 LOCAL_APPS = [
     'authentication',
-    'apps.socialauthentication',
-    'apps.CRUDS'
+    'socialauthentication',
+    'cruds',
 ]
 
 THIRD_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'django_rest_passwordreset',
 ]
@@ -148,8 +149,13 @@ AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'authentication.jwt.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ], 
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
