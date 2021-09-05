@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv 
+import os
+
+load_dotenv ()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ga7j^4q3%mfbhgdg21-@9hrg)6n(m9)es*-ca-tzbfd=^(%h84'
+SECRET_KEY = str (os.getenv ( 'SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,10 +37,10 @@ ALLOWED_HOSTS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_prueba',
-        'USER': 'postgres',
-        'PASSWORD': 'postgresql',
-        'HOST': 'localhost',
+        'NAME': str (os.getenv ( 'NAME_DB')),
+        'USER': str (os.getenv ( 'USER_DB')),
+        'PASSWORD': str (os.getenv ( 'PASSWORD_DB')),
+        'HOST': str (os.getenv ( 'HOST_DB')),
         'PORT': '',
     }
 }
@@ -53,7 +57,7 @@ BASE_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.authentication',
+    'authentication',
     'apps.socialauthentication',
     'apps.CRUDS'
 ]
@@ -143,22 +147,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication', 
-    ), 
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'authentication.jwt.JWTAuthentication',
+    ], 
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER='luism3872@gmail.com'
-EMAIL_HOST_PASSWORD='Luisurbinamoro67'
+EMAIL_HOST_USER = str (os.getenv ( 'EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str (os.getenv ( 'EMAIL_HOST_PASSWORD'))
 
 
 FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"
 FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/v7.0/oauth/access_token"
 FACEBOOK_URL = "https://graph.facebook.com/"
 # Datos privados de la APP de Facebook
-CLIENT_ID="4276744392401466"
-CLIENT_SECRET="bdeb4abaf871d6c147a2c7b7a6d987ae"
+CLIENT_ID = str (os.getenv ( 'CLIENT_ID_FACEBOOK'))
+CLIENT_SECRET = str (os.getenv ( 'CLIENT_SECRET_FACEBOOK'))
