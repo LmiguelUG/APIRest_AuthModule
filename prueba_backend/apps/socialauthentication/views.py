@@ -9,7 +9,7 @@ import os
 from django.conf import settings
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from apps.authentication.models import User
+from authentication.models import User
 
 
 class FacebookAPIView(APIView):

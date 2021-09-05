@@ -7,8 +7,7 @@ from apps.CRUDS.permissions.serializers import PermissionSerializer, PermissionL
 
 # Importacion de modelos
 from django.contrib.auth.models import Permission
-from apps.authentication.models import User
-from apps.authentication.models import Rol
+from authentication.models import User
 
 
 

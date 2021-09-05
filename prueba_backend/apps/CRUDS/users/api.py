@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from apps.CRUDS.users.serializers import UserSerializer, UserListSerializer
-from apps.authentication.models import User
+from authentication.models import User
 
 @api_view(['GET','POST'])
 def UserAPI(request):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from apps.authentication.views import LoginAPIView, LogoutAPIView, RegisterView, PasswordTokenCheckAPI,VerifyEmailAPIView, RequestPasswordResetEmail, ProfileAPIView, SetNewPasswordAPIView
+from authentication.views import LoginAPIView, LogoutAPIView, RegisterView, PasswordTokenCheckAPI,VerifyEmailAPIView, RequestPasswordResetEmail, ProfileAPIView, SetNewPasswordAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
