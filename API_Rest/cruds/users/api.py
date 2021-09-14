@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-from apps.CRUDS.users.serializers import UserSerializer, UserListSerializer
+from .serializers import UserSerializer, UserListSerializer
 from authentication.models import User
 
 @api_view(['GET','POST'])

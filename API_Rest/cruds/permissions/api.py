@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from apps.CRUDS.permissions.serializers import PermissionSerializer, PermissionListSerializer, UpdatePermissionSerializer
+from .serializers import PermissionSerializer, PermissionListSerializer, UpdatePermissionSerializer
 
 # Importacion de modelos
 from django.contrib.auth.models import Permission

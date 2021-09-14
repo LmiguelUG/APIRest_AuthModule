@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.CRUDS.permissions.api import PermissionAPI, PermissionDetailsAPI
+from .api import PermissionAPI, PermissionDetailsAPI
 
 urlpatterns = [
     path('', PermissionAPI, name = 'PermissionAPI'),
